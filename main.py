@@ -1,12 +1,12 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.responses import FileResponse, JSONResponse
+from starlette.responses import FileResponse
 import os
 
 import tools.OpenAI_APIs as api
 import tools.Constant as const
 import tools.Common as common
-import tools.API_KEY as key
+from tools import API_KEY as key
 
 app = FastAPI()
 
