@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload Example</title>
+</head>
+<body>
+<h2>이미지 업로드</h2>
+
+<form id="uploadForm" enctype="multipart/form-data">
+    <label for="file">이미지 선택:</label>
+    <input type="file" name="file" id="file" accept="image/*">
+    <br>
+    <input type="button" value="업로드" onclick="uploadImage()">
+</form>
+<div id="prompt_result"></div>
+
+<script>
+    function uploadImage() {
+        var formData = new FormData(document.getElementById('uploadForm'));
+        console.log(formData);
+
+        fetch('http://localhost:8000/upload/photo', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('업로드 결과:', data);
+            document.getElementById("prompt_result").innerText = data.choices[0].message.content;
+        })
+        .catch(error => {
+            console.error('에러 발생:', error);
+        });
+    }
+</script>
+</body>
+</html>
