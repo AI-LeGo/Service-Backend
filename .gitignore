@@ -19,7 +19,8 @@ docs_build
 venv
 docs.zip
 archive.zip
-tools
+tools/API_KEY.py
+API_KEY.py
 
 # vim temporary files
 *~
