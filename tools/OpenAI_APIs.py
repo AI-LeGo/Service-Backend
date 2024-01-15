@@ -72,29 +72,3 @@ def get_openai_assistant(name: str, instructions: str, type: str, client: OpenAI
     )
     return assistant
 
-
-# client = OpenAI(api_key="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")
-#
-# response = client.chat.completions.create(
-#     model="gpt-4-vision-preview",
-#     messages=[
-#         {
-#             "role": "user",
-#             "content": [
-#                 {
-#                     "type": "text",
-#                     "text": "Describe this 4-cut cartoon in detail."
-#                 },
-#                 {
-#                     "type": "image_url",
-#                     "image_url": {
-#                         "url": "https://assets.amuniversal.com/6f5baf508308013c308d005056a9545d",
-#                     },
-#                 },
-#             ],
-#         }
-#     ],
-#     max_tokens=300,
-# )
-#
-# print(response.choices[0].message.content)
