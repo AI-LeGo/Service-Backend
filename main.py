@@ -1,6 +1,7 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import FileResponse
+
 import os
 
 import tools.OpenAI_APIs as api
@@ -39,6 +40,7 @@ async def cartoon_caption():
 @app.post("/upload/photo")
 async def upload_photo(file: UploadFile = File(...)):
     try:
+        # Reading uploaded local file
         contents = await file.read()
         FILE_DIR = UPLOAD_DIR + file.filename
 
@@ -48,10 +50,23 @@ async def upload_photo(file: UploadFile = File(...)):
             api_key = key.api_key
             client = api.get_openai_client(api_key=api_key)
 
+            # OpenAI API request
             image_path = FILE_DIR
             base64_image = common.encode_image(image_path)
-            result = api.get_openai_api_cartoon_caption(api_key, base64_image, const.prompt_cartoons, 300)
+            result = api.get_openai_api_cartoon_caption(api_key, base64_image, const.prompt_cartoons, 500)
 
             return result
+
+            # # Preparing data for TTS input
+            # result_text = result.choices[0].message.content
+            # tts_input = common.parse_result_text(result_text)
+            #
+            # # Getting TTS result WAV file
+            # result_wav = common.run_tts_model(tts_input)
+            #
+            # return result_wav
+
+    # Error handling
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
