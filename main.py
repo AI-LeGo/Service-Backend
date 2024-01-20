@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import FileResponse
 
 import os
+import json
 
 import tools.OpenAI_APIs as api
 import tools.Constant as const
@@ -56,6 +57,13 @@ async def upload_photo(file: UploadFile = File(...)):
             result = api.get_openai_api_cartoon_caption(api_key, base64_image, const.prompt_cartoons, 500)
 
             return result
+
+            # Parsing data for TTS model input
+            result_json = json.loads(result)
+            tts_container_name = const.tts_container_name
+            script_path = const.script_path
+
+            tts_result = common.run_tts_model(result_json, tts_container_name, script_path)
 
             # # Preparing data for TTS input
             # result_text = result.choices[0].message.content
