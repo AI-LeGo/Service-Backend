@@ -22,6 +22,7 @@ archive.zip
 tools/API_KEY.py
 API_KEY.py
 photo
+nohup.out
 
 # vim temporary files
 *~

@@ -4,6 +4,9 @@ from starlette.responses import FileResponse
 
 import os
 import json
+import subprocess
+import shutil
+from datetime import datetime
 
 import tools.OpenAI_APIs as api
 import tools.Constant as const
@@ -43,9 +46,13 @@ async def upload_photo(file: UploadFile = File(...)):
     try:
         # Reading uploaded local file
         contents = await file.read()
-        FILE_DIR = UPLOAD_DIR + file.filename
+        # Making file name using current time
+        current_time = datetime.now()
+        file_name = current_time.strftime("%Y%m%d%H%M%S%f")[:-2]
 
-        with open(UPLOAD_DIR + file.filename, "wb") as f:
+        FILE_DIR = UPLOAD_DIR + file_name + '.jpeg'
+
+        with open(FILE_DIR, "wb") as f:
             f.write(contents)
 
             api_key = key.api_key
@@ -54,27 +61,24 @@ async def upload_photo(file: UploadFile = File(...)):
             # OpenAI API request
             image_path = FILE_DIR
             base64_image = common.encode_image(image_path)
-            result = api.get_openai_api_cartoon_caption(api_key, base64_image, const.prompt_cartoons, 500)
-
-            return result
-
-            # Parsing data for TTS model input
-            result_json = json.loads(result)
-            tts_container_name = const.tts_container_name
-            script_path = const.script_path
-
-            tts_result = common.run_tts_model(result_json, tts_container_name, script_path)
-
-            # # Preparing data for TTS input
-            # result_text = result.choices[0].message.content
-            # tts_input = common.parse_result_text(result_text)
-            #
-            # # Getting TTS result WAV file
-            # result_wav = common.run_tts_model(tts_input)
-            #
-            # return result_wav
+            result = api.get_openai_api_cartoon_caption(api_key, base64_image, const.prompt_cartoons, 700)
+            
+            json_data = json.loads(result['choices'][0]['message']['content'])
+            
+            with open(f'../Emotional-TTS/json/{file_name}.json', 'w') as json_file:
+                json.dump(json_data, json_file, indent=2)
+            
+            tts_result = subprocess.run([f"cd ../Emotional-TTS; python inference.py {file_name};"], shell=True)
+                
+            if tts_result:
+                parent_directory = os.path.dirname(os.getcwd())
+                wav_file_path = parent_directory + f"/Emotional-TTS/outputs/gen_{file_name}.wav"
+                
+                return FileResponse(wav_file_path, filename=file_name, media_type="audio/wav")
+            
 
     # Error handling
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
 

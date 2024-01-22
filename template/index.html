@@ -15,25 +15,37 @@
     <br>
     <input type="button" value="업로드" onclick="uploadImage()">
 </form>
+<audio controls id="audioPlayer">
+    Your browser does not support the audio element.
+</audio>
+
 <div id="prompt_result"></div>
 
 <script>
-    function uploadImage() {
+    async function uploadImage() {
         var formData = new FormData(document.getElementById('uploadForm'));
-        console.log(formData);
+        const audioPlayer = document.getElementById("audioPlayer");
 
-        fetch('http://localhost:8000/upload/photo', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('업로드 결과:', data);
-            document.getElementById("prompt_result").innerText = data.choices[0].message.content;
-        })
-        .catch(error => {
-            console.error('에러 발생:', error);
-        });
+        try {
+            const response = await fetch("http://ec2-44-200-25-62.compute-1.amazonaws.com:8000/upload/photo", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (response.ok) {
+                alert("Audio creation complete");
+                const blob = await response.blob();
+                const objectURL = URL.createObjectURL(blob);
+                audioPlayer.src = objectURL;
+                // audioPlayer.play();
+            } else {
+                alert("Error converting image to WAV");
+            }
+
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Error converting image to WAV");
+        }
     }
 </script>
 </body>
