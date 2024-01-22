@@ -1,6 +1,7 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import FileResponse
+from pydantic import BaseModel
 
 import os
 import json
@@ -69,16 +70,34 @@ async def upload_photo(file: UploadFile = File(...)):
                 json.dump(json_data, json_file, indent=2)
             
             tts_result = subprocess.run([f"cd ../Emotional-TTS; python inference.py {file_name};"], shell=True)
-                
             if tts_result:
                 parent_directory = os.path.dirname(os.getcwd())
                 wav_file_path = parent_directory + f"/Emotional-TTS/outputs/gen_{file_name}.wav"
                 
-                return FileResponse(wav_file_path, filename=file_name, media_type="audio/wav")
-            
+                with open(f'../Emotional-TTS/text_file/{file_name}.txt', "r", encoding="utf-8") as text_file:
+                    script_text = text_file.read()
+                
+                response = {
+                    # "file" : FileResponse(wav_file_path, filename=file_name, media_type="audio/wav"),
+                    "script" : script_text,
+                    "file_name" : file_name,
+                }
+                
+                return response
 
     # Error handling
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
 
+@app.post("/wav/{file_name}")
+async def get_wav(file_name: str):
+    try:
+        parent_directory = os.path.dirname(os.getcwd())
+        wav_file_path = parent_directory + f"/Emotional-TTS/outputs/gen_{file_name}.wav"
+        
+        print(wav_file_path)
+        
+        return FileResponse(wav_file_path, filename=file_name, media_type="audio/wav")        
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
