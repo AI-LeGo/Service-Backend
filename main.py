@@ -62,7 +62,7 @@ async def upload_photo(file: UploadFile = File(...)):
             # OpenAI API request
             image_path = FILE_DIR
             base64_image = common.encode_image(image_path)
-            result = api.get_openai_api_cartoon_caption(api_key, base64_image, const.prompt_cartoons, 700)
+            result = api.get_openai_api_cartoon_caption(api_key, base64_image, const.prompt_cartoons, 1000)
             
             json_data = json.loads(result['choices'][0]['message']['content'])
             

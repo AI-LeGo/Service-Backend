@@ -30,7 +30,7 @@ prompt_cartoons = """
             
                         Make another dictionary that has speaker, emotion, speech in it. There may be more than one speech in a scene. If there's no speech, you don't have to make new dictionary.
                 "speaker" : The character currently speaking in this scene.
-                "emotion" : Choose one of these six emotions to explain how characters in this picture feels: [neutral, calm, happy, sad, angry, fearful, disgust, surprised]
+                "emotion" : Choose one of these eight emotions to explain how characters in this picture feels: [neutral, calm, happy, sad, angry, fearful, disgust, surprised]
                 "text" : The speech that the character currently speaking in this scene. If there is no punctuation mark at the end of the speech, add period.
             ],
             “scene#2” : [
