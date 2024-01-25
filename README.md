@@ -10,7 +10,7 @@
 
 ### Prerequisites
 
-- Python 3.8 이상
+- Python 3.10 이상
 
 ### Installation
 
@@ -28,7 +28,7 @@
 
 - FastAPI 서버 실행:
   ```bash
-  uvicorn main:app --reload
+  uvicorn main:app --reload --host=0.0.0.0 --port=8000
   ```
 
 - Docker를 사용한 실행:
