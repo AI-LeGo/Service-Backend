@@ -16,7 +16,7 @@
 
 1. Clone the repository:
    ```bash
-   git clone [Repository URL]
+   https://github.com/AI-LeGo/Service-Backend.git
    ```
 
 2. Install dependencies:
@@ -29,12 +29,6 @@
 - FastAPI 서버 실행:
   ```bash
   uvicorn main:app --reload --host=0.0.0.0 --port=8000
-  ```
-
-- Docker를 사용한 실행:
-  ```bash
-  docker build -t service-backend .
-  docker run -d --name myservice -p 80:80 service-backend
   ```
 
 ## API Reference
@@ -50,11 +44,3 @@
 - `photo/`: 업로드된 이미지 저장 폴더
 - `template/`: 프론트엔드 템플릿 파일
 - `tools/`: OpenAI API 및 기타 도구 모듈
-
-## Docker Support
-
-`Dockerfile`을 사용하여 컨테이너화된 환경에서 서비스를 실행할 수 있습니다.
-
-## License
-
-이 프로젝트는 [MIT 라이선스](LICENSE) 하에 배포됩니다.
